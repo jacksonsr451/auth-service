@@ -6,9 +6,9 @@ from auth.infrastructure.models.role_model import RoleModel
 
 class RoleRepositoryImpl(RoleRepositoryInterface):
     def create(self, role: Role) -> RoleModel:
-        role = RoleModel.query.filter_by(name=role.name).first()
-        if role is None:
-            role = RoleModel(name=role.name)
-            session.add(role)
+        role_model = RoleModel.query.filter_by(name=role.name).first()
+        if role_model is None:
+            role_model = RoleModel(name=role.name)
+            session.add(role_model)
             session.commit()
-        return role
+        return role_model

@@ -1,3 +1,4 @@
+from auth.domain.users.user import User
 from auth.domain.users.user_repository_interface import UserRepositoryInterface
 from auth.infrastructure.adapters.database import session
 from auth.infrastructure.models.user_model import UserModel
@@ -5,8 +6,9 @@ from auth.infrastructure.models.user_model import UserModel
 
 class UserRepositoryImpl(UserRepositoryInterface):
 
-    def create(self, user: UserModel) -> UserModel:
-        session.add(user)
+    def create(self, user: User, role_id: int) -> UserModel:
+        session.add(UserModel(username=user.username,
+                    email=user.email, password=user.password, role_id=role_id))
         session.commit()
         return user
 

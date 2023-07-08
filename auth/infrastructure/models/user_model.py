@@ -13,16 +13,16 @@ class UserModel(db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     role = relationship("RoleModel")
 
-    def __init__(self, username, password, email, role):
+    def __init__(self, username, password, email, role_id):
         self.username = username
         self.password = password
         self.email = email
-        self.role = role
+        self.role_id = role_id
 
     def to_entity(self) -> User:
         return User(
             username=self.username,
             password=self.password,
             email=self.email,
-            role=self.role
+            role_id=self.role
         )

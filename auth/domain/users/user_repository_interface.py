@@ -6,7 +6,7 @@ from auth.infrastructure.models.user_model import UserModel
 
 class UserRepositoryInterface(ABC):
     @abstractmethod
-    def create(self, user: User) -> UserModel:
+    def create(self, user: User, role: str) -> UserModel:
         pass
 
     @abstractmethod
