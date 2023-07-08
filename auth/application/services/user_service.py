@@ -1,7 +1,6 @@
-from re import U
-from auth.domain.user import User
-from auth.domain.user_repository_interface import UserRepositoryInterface
-from auth.domain.user_services_interface import UserServiceInterface
+from auth.domain.user.user import User
+from auth.domain.user.user_repository_interface import UserRepositoryInterface
+from auth.domain.user.user_services_interface import UserServiceInterface
 from auth.infrastructure.models.user_model import UserModel
 
 
