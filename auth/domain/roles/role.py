@@ -11,5 +11,5 @@ class Role:
     def __validate_role(self, name) -> str:
         valid_names = [role.value for role in RoleEnum]
         if name not in valid_names:
-            raise ValueError("Invalid role")
+            raise ValueError('Invalid role')
         return name

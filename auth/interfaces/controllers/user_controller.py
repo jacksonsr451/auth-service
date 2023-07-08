@@ -14,7 +14,8 @@ from auth.application.dtos.login_response import LoginResponse
 from auth.application.dtos.login_with_gmail_request import \
     LoginWithGmailRequest
 from auth.application.services.user_service import UserService
-from auth.infrastructure.repositories.role_repository_impl import RoleRepositoryImpl
+from auth.infrastructure.repositories.role_repository_impl import \
+    RoleRepositoryImpl
 from auth.infrastructure.repositories.user_repository_impl import \
     UserRepositoryImpl
 
@@ -52,8 +53,7 @@ def login():
             token = generate_token(user.username)
             return LoginResponse(token=token).to_dict()
     else:
-        user = user_service.get_user_by_username(
-            data.username)
+        user = user_service.get_user_by_username(data.username)
         if user and check_password_hash(user.password, data.password):
             token = generate_token(user.username)
             return LoginResponse(token=token).to_dict()
@@ -73,8 +73,7 @@ def login_with_gmail():
 
         if not user:
             password = generate_password_hash('gmailuser')
-            user = user_service.create_user(
-                username, password, email)
+            user = user_service.create_user(username, password, email)
 
         token = generate_token(username)
         return LoginResponse(token=token).to_dict()

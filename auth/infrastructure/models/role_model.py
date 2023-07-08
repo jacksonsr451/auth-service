@@ -12,6 +12,4 @@ class RoleModel(db.Model):
         self.name = name
 
     def to_entity(self) -> Role:
-        return Role(
-            name=self.name
-        )
+        return Role(name=self.name)

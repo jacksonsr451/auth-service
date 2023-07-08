@@ -1,6 +1,6 @@
 from auth.domain.roles.role import Role
-from auth.infrastructure.adapters.database import session
 from auth.domain.roles.role_repository_interface import RoleRepositoryInterface
+from auth.infrastructure.adapters.database import session
 from auth.infrastructure.models.role_model import RoleModel
 
 

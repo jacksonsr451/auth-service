@@ -1,7 +1,7 @@
 from flask import Flask
 
-from auth.interfaces.controllers.user_controller import auth_bp
 from auth.infrastructure.adapters import database, migrate
+from auth.interfaces.controllers.user_controller import auth_bp
 from commands import create_superuser
 
 

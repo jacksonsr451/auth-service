@@ -1,6 +1,7 @@
+from sqlalchemy.orm import relationship
+
 from auth.domain.users.user import User
 from auth.infrastructure.adapters.database import db
-from sqlalchemy.orm import relationship
 
 
 class UserModel(db.Model):
@@ -11,7 +12,7 @@ class UserModel(db.Model):
     password = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    role = relationship("RoleModel")
+    role = relationship('RoleModel')
 
     def __init__(self, username, password, email, role_id):
         self.username = username
@@ -24,5 +25,5 @@ class UserModel(db.Model):
             username=self.username,
             password=self.password,
             email=self.email,
-            role_id=self.role
+            role_id=self.role,
         )

@@ -6,16 +6,27 @@ from auth.domain.users.user_services_interface import UserServiceInterface
 
 
 class UserService(UserServiceInterface):
-    def __init__(self, user_repository: UserRepositoryInterface, role_repository: RoleRepositoryInterface):
+    def __init__(
+        self,
+        user_repository: UserRepositoryInterface,
+        role_repository: RoleRepositoryInterface,
+    ):
         self.user_repository = user_repository
         self.role_repository = role_repository
 
-    def create_user(self, username: str, password: str, email: str, role: str) -> User:
+    def create_user(
+        self, username: str, password: str, email: str, role: str
+    ) -> User:
         role = self.role_repository.create(Role(name=role))
         user = self.user_repository.create(
-            User(username=username, password=password,
-                 email=email, role=role.name),
-            role_id=role.id)
+            User(
+                username=username,
+                password=password,
+                email=email,
+                role=role.name,
+            ),
+            role_id=role.id,
+        )
         return user.to_entity()
 
     def get_users(self) -> list[User]:
