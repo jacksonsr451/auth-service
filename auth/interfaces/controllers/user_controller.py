@@ -14,6 +14,7 @@ from auth.application.dtos.login_response import LoginResponse
 from auth.application.dtos.login_with_gmail_request import \
     LoginWithGmailRequest
 from auth.application.services.user_service import UserService
+from auth.infrastructure.repositories.role_repository_impl import RoleRepositoryImpl
 from auth.infrastructure.repositories.user_repository_impl import \
     UserRepositoryImpl
 
@@ -21,7 +22,7 @@ auth_bp = Blueprint('auth', __name__)
 
 dotenv.load_dotenv()
 
-user_service = UserService(UserRepositoryImpl())
+user_service = UserService(UserRepositoryImpl(), RoleRepositoryImpl())
 
 
 @auth_bp.route('/users', methods=['GET'])
@@ -34,7 +35,7 @@ def create_user():
     data = CreateUserRequest(data=request.get_json())
     hashed_password = generate_password_hash(data.password)
     user = user_service.create_user(
-        data.username, hashed_password, data.email
+        data.username, hashed_password, data.email, data.role
     )
     return CreateUserResponse(
         username=user.username, email=user.email

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from auth.domain.user import User
+from auth.domain.users.user import User
 
 
 class UserServiceInterface(ABC):

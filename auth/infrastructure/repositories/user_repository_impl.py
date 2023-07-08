@@ -1,4 +1,4 @@
-from auth.domain.user.user_repository_interface import UserRepositoryInterface
+from auth.domain.users.user_repository_interface import UserRepositoryInterface
 from auth.infrastructure.adapters.database import session
 from auth.infrastructure.models.user_model import UserModel
 
