@@ -1,6 +1,6 @@
 from sqlalchemy.orm import relationship
 
-from auth.domain.users.user import User
+from auth.application.dtos.user_dto import UserDTO
 from auth.infrastructure.adapters.database import db
 
 
@@ -20,10 +20,9 @@ class UserModel(db.Model):
         self.email = email
         self.role_id = role_id
 
-    def to_entity(self) -> User:
-        return User(
+    def to_dto(self) -> UserDTO:
+        return UserDTO(
             username=self.username,
-            password=self.password,
             email=self.email,
-            role_id=self.role,
+            role_id=self.role_id,
         )

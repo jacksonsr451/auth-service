@@ -1,3 +1,5 @@
+from sqlalchemy.orm import joinedload
+
 from auth.domain.users.user import User
 from auth.domain.users.user_repository_interface import UserRepositoryInterface
 from auth.infrastructure.adapters.database import session
