@@ -1,4 +1,4 @@
-from sqlalchemy.orm import joinedload
+import bcrypt
 
 from auth.domain.users.user import User
 from auth.domain.users.user_repository_interface import UserRepositoryInterface
@@ -12,7 +12,9 @@ class UserRepositoryImpl(UserRepositoryInterface):
             UserModel(
                 username=user.username,
                 email=user.email,
-                password=user.password,
+                password=bcrypt.hashpw(
+                    user.password.encode('utf-8'), bcrypt.gensalt()
+                ),
                 role_id=role_id,
             )
         )
