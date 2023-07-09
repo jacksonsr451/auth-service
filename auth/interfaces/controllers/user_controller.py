@@ -36,13 +36,18 @@ def get_users():
 @auth_bp.route('/users', methods=['POST'])
 def create_user():
     data = CreateUserRequest(data=request.get_json())
-    hashed_password = generate_password_hash(data.password)
-    user = user_service.create_user(
-        data.username, hashed_password, data.email, data.role
-    )
-    return CreateUserResponse(
-        username=user.username, email=user.email
-    ).to_dict()
+
+    if __validate_user_role(data):
+        hashed_password = generate_password_hash(data.password)
+        user = user_service.create_user(
+            data.username, hashed_password, data.email, data.role
+        )
+        return CreateUserResponse(
+            username=user.username, email=user.email
+        ).to_dict()
+    return {
+        'message': 'Você não tem permissão para criar um usuário com a função de super_admin'
+    }, 403
 
 
 @auth_bp.route('/login', methods=['POST'])
@@ -52,12 +57,12 @@ def login():
     if data.username.endswith('@gmail.com'):
         user = user_service.get_user_by_email(data.username)
         if user and check_password_hash(user.password, data.password):
-            token = generate_token(user.username, user.role_id)
+            token = __generate_token(user.username, user.role_id)
             return LoginResponse(token=token).to_dict()
     else:
         user = user_service.get_user_by_username(data.username)
         if user and check_password_hash(user.password, data.password):
-            token = generate_token(user.username, user.role_id)
+            token = __generate_token(user.username, user.role_id)
             return LoginResponse(token=token).to_dict()
 
     return {'error': 'Invalid username or password'}, 401
@@ -68,7 +73,7 @@ def login_with_gmail():
     data = LoginWithGmailRequest(data=request.get_json())
 
     try:
-        token_info = verify_google_token(data.id_token)
+        token_info = __verify_google_token(data.id_token)
         email = token_info.get('email')
         username = email.split('@')[0]
         user = user_service.get_user_by_email(email)
@@ -77,14 +82,20 @@ def login_with_gmail():
             password = generate_password_hash('gmailuser')
             user = user_service.create_user(username, password, email)
 
-        token = generate_token(username, user.role_id)
+        token = __generate_token(username, user.role_id)
         return LoginResponse(token=token).to_dict()
 
     except ValueError:
         return {'error': 'Invalid Google token'}, 401
 
 
-def verify_google_token(id_token):
+def __validate_user_role(data):
+    if data.role.__eq__('super_admin'):
+        return False
+    return True
+
+
+def __verify_google_token(id_token):
     return id_token.verify_oauth2_token(
         id_token,
         google_requests.Request(),
@@ -92,7 +103,7 @@ def verify_google_token(id_token):
     )
 
 
-def generate_token(username, role_id):
+def __generate_token(username, role_id):
     payload = {
         'username': username,
         'role_id': role_id,

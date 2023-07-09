@@ -6,16 +6,15 @@ from auth.infrastructure.models.user_model import UserModel
 
 class UserRepositoryImpl(UserRepositoryInterface):
     def create(self, user: User, role_id: int) -> UserModel:
-        session.add(
-            UserModel(
-                username=user.username,
-                email=user.email,
-                password=user.password,
-                role_id=role_id,
-            )
+        user_model = UserModel(
+            username=user.username,
+            email=user.email,
+            password=user.password,
+            role_id=role_id,
         )
+        session.add(user_model)
         session.commit()
-        return user
+        return user_model
 
     def get_all(self) -> list[UserModel]:
         return session.query(UserModel).all()
