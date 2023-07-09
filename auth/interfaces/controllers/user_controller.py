@@ -18,6 +18,7 @@ from auth.infrastructure.repositories.role_repository_impl import \
     RoleRepositoryImpl
 from auth.infrastructure.repositories.user_repository_impl import \
     UserRepositoryImpl
+from auth.middlewares.is_superuser_middleware import jwt_superadmin_required
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -27,6 +28,7 @@ user_service = UserService(UserRepositoryImpl(), RoleRepositoryImpl())
 
 
 @auth_bp.route('/users', methods=['GET'])
+@jwt_superadmin_required
 def get_users():
     return GetUsersResponse(users=user_service.get_users()).to_dict()
 
@@ -50,12 +52,12 @@ def login():
     if data.username.endswith('@gmail.com'):
         user = user_service.get_user_by_email(data.username)
         if user and check_password_hash(user.password, data.password):
-            token = generate_token(user.username)
+            token = generate_token(user.username, user.role_id)
             return LoginResponse(token=token).to_dict()
     else:
         user = user_service.get_user_by_username(data.username)
         if user and check_password_hash(user.password, data.password):
-            token = generate_token(user.username)
+            token = generate_token(user.username, user.role_id)
             return LoginResponse(token=token).to_dict()
 
     return {'error': 'Invalid username or password'}, 401
@@ -75,7 +77,7 @@ def login_with_gmail():
             password = generate_password_hash('gmailuser')
             user = user_service.create_user(username, password, email)
 
-        token = generate_token(username)
+        token = generate_token(username, user.role_id)
         return LoginResponse(token=token).to_dict()
 
     except ValueError:
@@ -90,9 +92,10 @@ def verify_google_token(id_token):
     )
 
 
-def generate_token(username):
+def generate_token(username, role_id):
     payload = {
         'username': username,
+        'role_id': role_id,
         'exp': datetime.utcnow() + timedelta(hours=1),
     }
     token = jwt.encode(
