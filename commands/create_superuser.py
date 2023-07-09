@@ -1,6 +1,8 @@
 import click
 from flask import Flask
 from flask.cli import AppGroup
+from werkzeug.security import generate_password_hash
+
 
 from auth.application.services.user_service import UserService
 from auth.infrastructure.repositories.role_repository_impl import \
@@ -26,7 +28,7 @@ def init_app(app: Flask):
         UserService(UserRepositoryImpl(), RoleRepositoryImpl()).create_user(
             username=username,
             email=email,
-            password=password,
+            password=generate_password_hash(password),
             role='super_admin',
         )
         print(

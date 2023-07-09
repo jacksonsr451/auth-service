@@ -1,5 +1,3 @@
-import bcrypt
-
 from auth.domain.users.user import User
 from auth.domain.users.user_repository_interface import UserRepositoryInterface
 from auth.infrastructure.adapters.database import session
@@ -12,9 +10,7 @@ class UserRepositoryImpl(UserRepositoryInterface):
             UserModel(
                 username=user.username,
                 email=user.email,
-                password=bcrypt.hashpw(
-                    user.password.encode('utf-8'), bcrypt.gensalt()
-                ),
+                password=user.password,
                 role_id=role_id,
             )
         )

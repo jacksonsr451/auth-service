@@ -9,7 +9,7 @@ class UserModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     role = relationship('RoleModel')
@@ -25,4 +25,5 @@ class UserModel(db.Model):
             username=self.username,
             email=self.email,
             role_id=self.role_id,
+            password=self.password,
         )

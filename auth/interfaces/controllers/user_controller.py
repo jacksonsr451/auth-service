@@ -101,4 +101,4 @@ def generate_token(username, role_id):
     token = jwt.encode(
         payload, dotenv.get_key('.env', 'SECRET_KEY'), algorithm='HS256'
     )
-    return token.decode('utf-8')
+    return token
