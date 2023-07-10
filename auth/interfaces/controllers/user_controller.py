@@ -18,7 +18,7 @@ from auth.infrastructure.repositories.role_repository_impl import \
     RoleRepositoryImpl
 from auth.infrastructure.repositories.user_repository_impl import \
     UserRepositoryImpl
-from auth.middlewares.is_superuser_middleware import jwt_superadmin_required
+from auth.interfaces.middlewares.is_superuser_middleware import jwt_superadmin_required
 
 auth_bp = Blueprint('auth', __name__)
 
